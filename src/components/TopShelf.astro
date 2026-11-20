@@ -1,0 +1,136 @@
+---
+import { portrait, copy } from '../data/site';
+
+interface Props {
+  active?: string | null;
+}
+const { active = null } = Astro.props;
+
+const spines = [
+  { id: 'blogs', label: 'Blogs', title: 'Blogs: articles', tone: 'green' },
+  { id: 'notes', label: 'Notes', title: 'Notes: build walkthroughs', tone: 'oxblood' },
+  { id: 'ideas', label: 'Ideas', title: 'Ideas: invention applications', tone: 'tan' },
+  { id: 'album', label: 'Album', title: 'Album: photographs', tone: 'navy' },
+];
+
+---
+<div class="g-top" aria-label="Top shelf">
+  <div class="obj bookend-left" data-studio="bookpair" aria-hidden="true"><svg viewBox="0 0 92 168">
+    <path d="M3 167h44V33q0-4-4-4H7q-4 0-4 4z" fill="url(#bookNavy)" stroke="var(--ink)" stroke-width="2.2" stroke-linejoin="round" />
+    <path d="M5 46h40M5 51h40M5 145h40M5 150h40" stroke="#c9a24a" stroke-width="1.8" />
+    <path d="M25 84l8 12-8 12-8-12z" fill="none" stroke="#c9a24a" stroke-width="1.6" />
+    <path d="M9 34v130" stroke="#fff" stroke-opacity=".12" stroke-width="3" />
+    <path d="M47 167h40V16q0-4-4-4H51q-4 0-4 4z" fill="url(#bookRed)" stroke="var(--ink)" stroke-width="2.2" stroke-linejoin="round" />
+    <path d="M49 30h36M49 35h36M49 148h36M49 153h36" stroke="#d6ae5a" stroke-width="1.8" />
+    <rect x="55" y="62" width="24" height="40" rx="2" fill="#4a120c" stroke="#d6ae5a" stroke-width="1.4" />
+    <path d="M53 17v147" stroke="#fff" stroke-opacity=".14" stroke-width="3" />
+  </svg></div>
+
+  {spines.map((s) => (
+    <a
+      class:list={['obj spine', `spine--${s.id}`]}
+      href={`/writing/?tab=${s.id}&book=1`}
+      data-nav="writing"
+      data-tab={s.id}
+      data-studio="book"
+      data-book-tone={s.tone}
+      data-book-title={s.label}
+      aria-label={s.title}
+    >
+      <span class="spine__label">{s.label}</span>
+    </a>
+  ))}
+
+  <div class="obj bookend-right" data-studio="booklean" aria-hidden="true"><svg viewBox="0 0 44 136">
+    <path d="M4 134h26l12-124-24-6z" fill="url(#bookDark)" stroke="var(--ink)" stroke-width="2.4" stroke-linejoin="round" />
+    <path d="M8 112 34 114M12 30 38 32" stroke="#3a2416" stroke-width="2" />
+  </svg></div>
+
+  <div class="obj globe" data-globe data-studio="globe">
+    <svg class="globe__stand" viewBox="0 0 163 224" aria-hidden="true">
+      <path d="M80 168v38" stroke="var(--ink)" stroke-width="9" stroke-linecap="round" />
+      <path d="M80 168v38" stroke="url(#brass)" stroke-width="5" stroke-linecap="round" />
+      <ellipse cx="80" cy="219" rx="51" ry="4" fill="#3c2c1e" opacity=".3" />
+      <circle cx="80" cy="186" r="7" fill="url(#brass)" stroke="var(--ink)" stroke-width="2" />
+      <ellipse cx="80" cy="213" rx="52" ry="10" fill="#7a4a22" stroke="var(--ink)" stroke-width="2.2" />
+      <ellipse cx="80" cy="208" rx="46" ry="8" fill="url(#brass)" stroke="var(--ink)" stroke-width="2.2" />
+      <ellipse cx="80" cy="207" rx="34" ry="4.5" fill="none" stroke="#d8c49e" stroke-opacity=".6" stroke-width=".8" />
+    </svg>
+    <canvas class="globe__map" width="140" height="140" aria-hidden="true"></canvas>
+    <svg class="globe__front" viewBox="0 0 163 224" aria-hidden="true">
+      <defs>
+        <radialGradient id="globeShade" cx="0.36" cy="0.3" r="0.78">
+          <stop offset="0" stop-color="#fff8e6" stop-opacity=".22" />
+          <stop offset=".45" stop-color="#fff2d8" stop-opacity="0" />
+          <stop offset=".8" stop-color="#4f3c29" stop-opacity=".2" />
+          <stop offset="1" stop-color="#32271d" stop-opacity=".55" />
+        </radialGradient>
+      </defs>
+      <circle cx="80" cy="92" r="70" fill="url(#globeShade)" stroke="var(--ink)" stroke-width="2.4" />
+      <path d="M26 65a59 59 0 0 1 33-29" fill="none" stroke="#fff8e7" stroke-width="1.8" stroke-opacity=".45" stroke-linecap="round" />
+      <g transform="rotate(-18 80 92)">
+        <path d="M80 8a84 84 0 0 1 0 168" fill="none" stroke="var(--ink)" stroke-width="9" />
+        <path d="M80 8a84 84 0 0 1 0 168" fill="none" stroke="url(#brass)" stroke-width="5" />
+        <circle cx="80" cy="12" r="4.5" fill="url(#brass)" stroke="var(--ink)" stroke-width="1.6" />
+      </g>
+    </svg>
+    <span class="sr-only" id="globe-hint">Drag to turn the globe, or use the arrow keys. Home returns to the starting position.</span>
+  </div>
+
+  <a class="obj frame" href="/about/" data-nav="about" aria-label="About Ayush Jain">
+    <span class="frame__mat">
+      {portrait ? (
+        <img src={portrait.src} width={portrait.width} height={portrait.height} alt={copy.photoAlt} decoding="async" fetchpriority="low" />
+      ) : (
+        <span class="frame__empty" aria-hidden="true"></span>
+      )}
+    </span>
+  </a>
+
+  <button class="obj lamp" type="button" data-studio="lamp" data-lamp-toggle aria-label="Turn desk lamp off" aria-pressed="true">
+    <svg viewBox="0 0 294 232" aria-hidden="true">
+      <defs>
+        <linearGradient id="lampMetal" x1="0" y1=".2" x2="1" y2=".75">
+          <stop offset="0" stop-color="#302922" /><stop offset=".19" stop-color="#655746" />
+          <stop offset=".36" stop-color="#a18b69" /><stop offset=".41" stop-color="#d0bb92" />
+          <stop offset=".48" stop-color="#8b7758" /><stop offset=".72" stop-color="#514637" /><stop offset="1" stop-color="#29251f" />
+        </linearGradient>
+        <radialGradient id="lampReflector" cx=".48" cy=".3" r=".72">
+          <stop offset="0" stop-color="#fffdf1" /><stop offset=".42" stop-color="#ffedb9" />
+          <stop offset=".75" stop-color="#c6a16b" /><stop offset="1" stop-color="#64503b" />
+        </radialGradient>
+        <radialGradient id="lampEmitter"><stop stop-color="#fffef5" /><stop offset=".65" stop-color="#fff9dc" /><stop offset="1" stop-color="#eed39b" /></radialGradient>
+      </defs>
+      <!-- Weighted foot, rear cable and two connected parallel-link arms. -->
+      <ellipse cx="247" cy="225" rx="43" ry="5" fill="#30251b" opacity=".28" />
+      <path d="M217 213v8c0 10 64 10 64 0v-8Z" fill="url(#lampMetal)" stroke="#493c2d" stroke-width="1.2" />
+      <ellipse cx="249" cy="213" rx="32" ry="9" fill="url(#lampMetal)" stroke="#b29a72" stroke-width="1" />
+      <ellipse cx="249" cy="214" rx="23" ry="5" fill="none" stroke="#ede0c3" stroke-opacity=".2" />
+      <path d="M260 217c24-24 1-71-15-103S207 59 132 31" fill="none" stroke="#3c342b" stroke-width="2.5" />
+      <path d="M246 208 265 104 132 30M254 208 274 100 137 22" fill="none" stroke="#332c24" stroke-width="7" stroke-linejoin="round" />
+      <path d="M246 208 265 104 132 30M254 208 274 100 137 22" fill="none" stroke="url(#brass)" stroke-width="4" stroke-linejoin="round" />
+      <path d="M254 167 266 113M257 166l-4-3 6-3-5-4 6-3-4-4 6-3-4-4 6-3-4-4 6-3-4-4" fill="none" stroke="#a39173" stroke-width="1.5" />
+      {[{ x: 250, y: 205, r: 9 }, { x: 269, y: 102, r: 10 }, { x: 134, y: 26, r: 7 }].map((j) => (
+        <g>
+          <circle cx={j.x} cy={j.y} r={j.r} fill="url(#lampMetal)" stroke="#382f25" stroke-width="1.2" />
+          <circle cx={j.x} cy={j.y} r={j.r * .55} fill="url(#brass)" stroke="#c6ac7b" stroke-width=".8" />
+          <path d={`M${j.x - 2} ${j.y + 2}l4-4`} stroke="#594830" stroke-width="1.2" />
+        </g>
+      ))}
+      <!-- Neck terminates in the shade's crown. The bulb sits inside the reflector. -->
+      <path d="M132 26 100 12 91 21" fill="none" stroke="#30291f" stroke-width="11" stroke-linejoin="round" />
+      <path d="M132 24 101 10 92 19" fill="none" stroke="url(#brass)" stroke-width="6" stroke-linejoin="round" />
+      <g class="lamp__head" transform="translate(78 70) rotate(18)">
+        <path d="M-12-48v-12q12-6 24 0v12" fill="url(#lampMetal)" stroke="#453a2e" stroke-width="1.3" />
+        <path d="M-53 0C-48-18-31-45-12-49Q0-53 12-49C31-45 48-18 53 0Z" fill="url(#lampMetal)" stroke="#3a3228" stroke-width="1.4" />
+        <path d="M-39-8Q-26-38-7-46" fill="none" stroke="#f3ddad" stroke-opacity=".5" stroke-width="1.2" />
+        <path d="M20-39 24-35M27-31 30-27M33-23 36-19" stroke="#26231e" stroke-width="2" stroke-linecap="round" />
+        <ellipse cy="1" rx="54" ry="18" fill="#3e3426" stroke="#cbb186" stroke-width="1.5" />
+        <ellipse cy="1" rx="50" ry="14.5" fill="url(#lampReflector)" />
+        <ellipse cy="-4" rx="10" ry="4" fill="#b59e78" />
+        <ellipse class="lamp__bulb" cy="1" rx="16" ry="9" fill="url(#lampEmitter)" />
+        <path d="M-49 7Q0 26 49 7" fill="none" stroke="#f3dbab" stroke-width="2" />
+      </g>
+    </svg>
+  </button>
+</div>

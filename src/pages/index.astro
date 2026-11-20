@@ -1,0 +1,5 @@
+---
+import Shelf from '../components/Shelf.astro';
+import { pageGraph } from '../lib/seo/jsonld';
+---
+<Shelf ogType="profile" jsonld={pageGraph({ type: 'home' })} />

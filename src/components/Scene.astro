@@ -1,0 +1,147 @@
+---
+import Icon from './Icon.astro';
+import TopShelf from './TopShelf.astro';
+import Cabinet from './Cabinet.astro';
+import Desk from './Desk.astro';
+import Board from './Board.astro';
+import { breezeStyle, leafPath, leafSymbols, vine, vineMarkup } from './art';
+import { chips, social } from '../data/site';
+
+interface Props {
+  active?: string | null;
+}
+const { active = null } = Astro.props;
+
+// Balanced greenery: one corner cluster at each top corner, clear of the
+// profile column (x 82+) and the wall board (y 160+), as on the reference.
+const wallCorners = [
+  vine([-6, -20], [50, 38], [118, 22], 7, 34, 55, 0.25),
+  vine([6, -10], [40, 96], [24, 214], 7, 34, 58, 0.3),
+  vine([1546, 20], [1470, 40], [1400, 24], 6, 28, 55, 0.25),
+  vine([1546, 78], [1506, 86], [1480, 122], 3, 24, 55, 0.2),
+  vine([1550, -20], [1410, 40], [1320, 12], 8, 34, 58, 0.2),
+];
+// Side extension: on screens wider than 16:9 the wall and desk continue past
+// both edges (same stage units): one short garland per side.
+const wallSides = [
+  vine([-30, -20], [-90, 60], [-170, 40], 7, 36, 55, 0.25),
+  vine([1566, -20], [1626, 60], [1706, 40], 7, 36, 55, 0.25),
+];
+const wallVines = [...wallCorners, ...wallSides];
+const SOCIAL_ICON: Record<string, string> = { github: 'github', linkedin: 'linkedin', x: 'x' };
+const SOCIAL_NAME: Record<string, string> = { github: 'GitHub', linkedin: 'LinkedIn', x: 'X' };
+const profiles = social.map((s) => ({ href: s.url, icon: SOCIAL_ICON[s.platform] ?? 'external', label: `${SOCIAL_NAME[s.platform] ?? s.platform} (opens in a new tab)` }));
+const intro = 'I build web applications, AI-assisted tools, and turn ideas into useful products. Currently studying Computer Science at ABES Engineering College.';
+---
+<div class="stage" data-scene>
+  <svg class="defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="bookDark" x1="0" x2="1"><stop offset="0" stop-color="#4a2c18" /><stop offset=".45" stop-color="#7a4b2a" /><stop offset="1" stop-color="#3d2414" /></linearGradient>
+      <linearGradient id="bookCream" x1="0" x2="1"><stop offset="0" stop-color="#e2c9a2" /><stop offset=".4" stop-color="#f8ecd6" /><stop offset="1" stop-color="#d9bd93" /></linearGradient>
+      <linearGradient id="brass" x1="0" y1="0" x2="1" y2=".75"><stop offset="0" stop-color="#54412c" /><stop offset=".18" stop-color="#a08456" /><stop offset=".31" stop-color="#e4c895" /><stop offset=".4" stop-color="#b89b66" /><stop offset=".62" stop-color="#78603e" /><stop offset=".81" stop-color="#b69a6c" /><stop offset="1" stop-color="#59432c" /></linearGradient>
+      <linearGradient id="shade" x1="0" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="#9a6130" /><stop offset=".5" stop-color="#6f3f1a" /><stop offset="1" stop-color="#4a2810" /></linearGradient>
+      <radialGradient id="bulbHalo"><stop offset="0" stop-color="#fff3c0" stop-opacity=".95" /><stop offset=".5" stop-color="#ffd27a" stop-opacity=".45" /><stop offset="1" stop-color="#ffc35a" stop-opacity="0" /></radialGradient>
+      <linearGradient id="leafA" x1="0" y1="1" x2=".8" y2="0"><stop offset="0" stop-color="#263b20" /><stop offset=".28" stop-color="#536b32" /><stop offset=".48" stop-color="#8b9b50" /><stop offset=".52" stop-color="#5c7538" /><stop offset=".8" stop-color="#a4b66c" /><stop offset="1" stop-color="#76894b" /></linearGradient>
+      <linearGradient id="leafB" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#203720" /><stop offset=".32" stop-color="#3c5930" /><stop offset=".48" stop-color="#69844c" /><stop offset=".53" stop-color="#3c5b31" /><stop offset=".84" stop-color="#7c9658" /><stop offset="1" stop-color="#536f3b" /></linearGradient>
+      <linearGradient id="leafC" x1="0" y1="1" x2=".8" y2="0"><stop offset="0" stop-color="#3d5a24" /><stop offset=".3" stop-color="#6f8f3a" /><stop offset=".48" stop-color="#a9bf5f" /><stop offset=".52" stop-color="#7c9a42" /><stop offset=".8" stop-color="#c2d27e" /><stop offset="1" stop-color="#93a957" /></linearGradient>
+      <Fragment set:html={leafSymbols()} />
+      <linearGradient id="pot" x1="0" x2="1"><stop offset="0" stop-color="#8f806c" /><stop offset=".12" stop-color="#c8bba5" /><stop offset=".28" stop-color="#f5ecdb" /><stop offset=".36" stop-color="#fff9ed" /><stop offset=".54" stop-color="#eee3ce" /><stop offset=".83" stop-color="#b9aa91" /><stop offset="1" stop-color="#847562" /></linearGradient>
+      <linearGradient id="mug" x1="0" x2="1"><stop offset="0" stop-color="#a79881" /><stop offset=".12" stop-color="#ded2bb" /><stop offset=".25" stop-color="#faf3e5" /><stop offset=".33" stop-color="#fffaf0" /><stop offset=".54" stop-color="#f2e8d5" /><stop offset=".8" stop-color="#d5c7ad" /><stop offset="1" stop-color="#92816b" /></linearGradient>
+      <linearGradient id="alu" x1="0" y1="0" x2=".2" y2="1"><stop offset="0" stop-color="#e6e7ea" /><stop offset=".6" stop-color="#cfd1d5" /><stop offset="1" stop-color="#b3b6bc" /></linearGradient>
+      <linearGradient id="deskWood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3d2012" /><stop offset=".04" stop-color="#8f5430" /><stop offset=".12" stop-color="#7b4524" /><stop offset=".4" stop-color="#84502b" /><stop offset=".75" stop-color="#683a1e" /><stop offset="1" stop-color="#3f2112" /></linearGradient>
+      <linearGradient id="bookNavy" x1="0" x2="1"><stop offset="0" stop-color="#302d29" /><stop offset=".2" stop-color="#514a3e" /><stop offset=".45" stop-color="#696150" /><stop offset=".85" stop-color="#403b32" /><stop offset="1" stop-color="#28251f" /></linearGradient>
+      <linearGradient id="bookRed" x1="0" x2="1"><stop offset="0" stop-color="#443023" /><stop offset=".24" stop-color="#79553b" /><stop offset=".45" stop-color="#947052" /><stop offset=".85" stop-color="#63442e" /><stop offset="1" stop-color="#36261c" /></linearGradient>
+      <linearGradient id="cupWood" x1="0" x2="1"><stop offset="0" stop-color="#7a441c" /><stop offset=".3" stop-color="#c98b4c" /><stop offset=".5" stop-color="#dfa569" /><stop offset=".8" stop-color="#b8763a" /><stop offset="1" stop-color="#6e3c18" /></linearGradient>
+      <linearGradient id="cork" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d9ad74" /><stop offset=".6" stop-color="#bf8c52" /><stop offset="1" stop-color="#9a6a38" /></linearGradient>
+      <linearGradient id="pegWood" x1="0" x2="1"><stop offset="0" stop-color="#8a5526" /><stop offset=".5" stop-color="#c8904f" /><stop offset="1" stop-color="#7a4a20" /></linearGradient>
+      <linearGradient id="sunsetSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e98f62" /><stop offset=".45" stop-color="#f6c27c" /><stop offset=".8" stop-color="#fbe2a8" /></linearGradient>
+      <linearGradient id="dawnSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9fb7cf" /><stop offset=".6" stop-color="#f3d3a6" /><stop offset="1" stop-color="#f7e3bf" /></linearGradient>
+    </defs>
+  </svg>
+
+  <!-- Warm pools thrown on the wall by the pendant and the desk lamp (D-45). -->
+  <div class="pendant-glow" aria-hidden="true"></div>
+
+  <!-- The viewBox starts at 0 and the stage offset moves inside, so the plants'
+       transform origins (their roots and leaf bases) mean the same in every browser. -->
+  <svg class="wall-leaves" viewBox="0 0 2376 864" preserveAspectRatio="none" aria-hidden="true">
+    <g transform="translate(420 0)">
+      {wallVines.map((v, i) => {
+        const [x, y] = v.d.slice(1).split(/[ Q]/).map(Number);
+        return <g class="breeze" style={breezeStyle(x, y, i + 1)}><Fragment set:html={vineMarkup(v, { stem: 2.2, scale: 1.08 })} /></g>;
+      })}
+    </g>
+  </svg>
+  <div class="wall-shadow" aria-hidden="true"></div>
+  <div class="desk-surface" aria-hidden="true"><span class="desk-surface__sheen"></span><span class="desk-surface__edge"></span></div>
+  <div class="desk-light" aria-hidden="true"></div>
+
+  <header class="g-intro">
+    <h1 class="wordmark">
+      <span>THE</span>
+      <span>SHELF.</span>
+      <svg class="sparkle" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2c1.6 10 7.4 16.4 18 18-10.6 1.6-16.4 8-18 18-1.6-10-7.4-16.4-18-18C12.6 18.4 18.4 12 20 2z" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linejoin="round" /></svg>
+    </h1>
+    <p class="byline">A personal archive by <strong>Ayush Jain.</strong></p>
+    <hr class="rule" />
+    <p class="role">Developer · Inventor · Product Builder</p>
+    <p class="intro">{intro}</p>
+    {chips.length > 0 && (
+      <ul class="chips" role="list" aria-label="Focus areas">
+        {chips.map((c) => (
+          <li>
+            <a class="chip" href={c.href} data-nav={c.href.startsWith('/patents') ? 'patents' : 'projects'} data-group={c.href.split('group=')[1]}>
+              <Icon name={c.icon} size={22} />
+              <span>{c.label}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+    <a class="contact-cta" href="/contact/" data-nav="contact">
+      <Icon name="mail" size={22} />
+      <span class="contact-cta__copy">
+        <strong>Contact Me</strong>
+        <small>Have an idea? Let's build it together!</small>
+      </span>
+      <span class="contact-cta__arrow" aria-hidden="true">→</span>
+    </a>
+    {profiles.length > 0 && (
+      <ul class="profile-links" role="list" aria-label="Profiles">
+        {profiles.map((p) => (
+          <li>
+            <a class="profile-link" href={p.href} aria-label={p.label} target="_blank" rel="noopener noreferrer me">
+              <Icon name={p.icon} size={18} />
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </header>
+
+  <!-- Pendant lamp: decorative; it follows the desk-lamp switch. -->
+  <div class="obj pendant" data-studio="pendant" aria-hidden="true">
+    <svg viewBox="0 0 100 120">
+      <path d="M50 0v52" stroke="#2a1f16" stroke-width="2" />
+      <path d="M40 52h20l4 10H36z" fill="#3a2a1c" />
+      <path d="M12 96C14 74 30 62 50 62s36 12 38 34z" fill="url(#shade)" stroke="#2a160a" stroke-width="1.4" />
+      <ellipse cx="50" cy="96" rx="38" ry="7" fill="#2a1a0e" stroke="#c9a064" stroke-width="1.6" />
+      <ellipse class="pendant__bulb" cx="50" cy="99" rx="15" ry="9" fill="#fff3c0" />
+    </svg>
+  </div>
+
+  <TopShelf active={active} />
+
+  <Cabinet active={active} />
+  <Board />
+  <Desk active={active} />
+
+  <!-- Fixed indirect wall light; the shade contains its own directional cone. -->
+  <div class="lamp-glow" aria-hidden="true"></div>
+  <div class="lamp-beam" aria-hidden="true"></div>
+
+  <!-- One WebGL layer draws the physical objects over their HTML anchors (D-45).
+       It never takes pointer events; every control stays a real element. -->
+  <canvas class="studio-canvas" data-studio-canvas aria-hidden="true" hidden></canvas>
+  <div class="room-dim" aria-hidden="true"></div>
+</div>
